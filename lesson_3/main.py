@@ -1,8 +1,3 @@
-import os
-
-import requests
-
-
 def foo(name, age, blablabla):
     pass
 
