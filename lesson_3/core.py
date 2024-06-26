@@ -3,7 +3,7 @@ def foo(name, age, blablabla):
 
 
 def bar(num: int) -> str:
-    return 'henlo'
+    return "henlo"
 
 
 def baz():
