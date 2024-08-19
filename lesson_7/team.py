@@ -13,13 +13,18 @@ def repr_players(players: list[dict]):
             )
 
 def player_add(name: str, age: int, number: int) -> dict:
-    player: dict = {
-        "name" : name,
-        "age" : age,
-        "number" : number, 
-    }
-    team.append(player)
-    return player
+    for player in team:
+        if player["number"] == number:
+            print(f"the player with #{number} exists")
+            break
+        else:
+            player: dict = {
+                "name" : name,
+                "age" : age,
+                "number" : number, 
+            }
+            team.append(player)
+            return player
 
 def player_delete(number: int)-> None:
     for player in team:
@@ -27,7 +32,7 @@ def player_delete(number: int)-> None:
             del player
 
 def main():    
-    operations: tuple[str, ...] = ("add", "del", "repr", "exit")
+    operations: tuple[str, ...] = ("add", "del", "repr", "upd", "exit")
     
     while True:
         operation = input("Please enter the operation: ")
@@ -49,6 +54,16 @@ def main():
             except ValueError:
                 print("Age and number must be integers\n\n")
                 continue
+        elif operation == "upd":
+            user_input = input("Enter the # of the player to be updated")
+            player_num = int(user_input)
+            for player in team:
+                if player["number"] == player_num:
+                    new_name = input("enter new name")
+                    new_age = input("enter new age")
+                    player["name"]=new_name
+                    player["age"]= int(new_age)
+                    break
         else:
             raise NotImplementedError
     
