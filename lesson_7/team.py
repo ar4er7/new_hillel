@@ -25,6 +25,20 @@ def player_add(name: str, age: int, number: int) -> dict:
             }
             team.append(player)
             return player
+        
+def player_update(new_name: str, new_age: int, player_num:int)->None:
+    is_found = False
+    for player in team:
+        if player["number"] == player_num:
+            player["name"] = new_name
+            player["age"] = new_age
+            print(f"player# {player_num} new name {new_name}, new age {new_age}")
+            is_found = True
+                        
+    if is_found == False:
+        raise ValueError
+        
+            
 
 def player_delete(number: int)-> None:
     for player in team:
@@ -55,15 +69,16 @@ def main():
                 print("Age and number must be integers\n\n")
                 continue
         elif operation == "upd":
-            user_input = input("Enter the # of the player to be updated")
-            player_num = int(user_input)
-            for player in team:
-                if player["number"] == player_num:
-                    new_name = input("enter new name")
-                    new_age = input("enter new age")
-                    player["name"]=new_name
-                    player["age"]= int(new_age)
-                    break
+            user_data = input("Enter a new name, age and# [name, age, number]: ")
+            user_items: list[str] = user_data.split(",")
+            name, age, num = user_items
+            try:
+                player_update(name, int(age), int(num))
+            except:
+                ValueError
+                print(f"there is no player with # {num}")
+                continue
+
         else:
             raise NotImplementedError
     
