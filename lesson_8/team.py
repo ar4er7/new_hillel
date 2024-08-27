@@ -1,5 +1,6 @@
 from . import database
 
+
 def repr_players(): 
     team: dict[int,dict] = database.get_team()
     for number, player in team.items():
@@ -14,18 +15,16 @@ def player_add(name: str, age: int, number: int) -> dict | None:
     else:
         return player
         
-def player_update(new_name: str, new_age: int, player_num:int)->None:
-    is_found = False
-    for player in team:
-        if player["number"] == player_num:
-            player["name"] = new_name
-            player["age"] = new_age
-            print(f"player# {player_num} new name {new_name}, new age {new_age}")
-            is_found = True
-                        
-    if is_found == False:
-        raise ValueError
-        
+def player_update(name: str, age: int, number:int)-> dict | None:
+    player: dict | None = database.get(id_=number)
+    if player is not None:
+        player["name"] = name
+        player["age"] = age
+        database.update(id_=number, instance= player)
+        return player
+    else:
+        print(f"player with #{number} doesn't exist")
+        return None
             
 
 def player_delete(number: int)-> bool:
@@ -64,15 +63,27 @@ def main():
                 continue
             
         elif operation == "upd":
-            user_data = input("Enter a new name, age and# [name, age, number]: ")
+            user_data = input(
+                "Enter a new player's info [name, age, number]: "
+            )
             user_items: list[str] = user_data.split(",")
-            name, age, num = user_items
+            name, age, number = user_items
             try:
-                player_update(name, int(age), int(num))
-            except:
-                ValueError
-                print(f"there is no player with # {num}")
+                new_player = player_update(
+                    name=name, age=int(age), number=int(number)
+                )
+            except ValueError:
+                print("Age and number must be integers\n\n")
                 continue
+            else:
+                if new_player is None:
+                    print(f"player# {number} is not updated")
+                else:
+                    print(
+                        f"player [{number}] has been updated." 
+                        f"Name:[{new_player['name']}]," 
+                        f"age:[{new_player['age']}]"
+                    )
         
         elif operation == "del":
             user_data = input("Enter the palyer's # [int]: ")

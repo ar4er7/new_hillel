@@ -9,6 +9,14 @@ _TEAM: TEAM_TYPE = {
 def get_team() -> TEAM_TYPE:
     return _TEAM
 
+def get(id_: int) -> dict | None:
+    try:
+        player = _TEAM[id_]
+    except KeyError:
+        return None
+    else:
+        return player
+    
 def save(id_: int, instance: dict, debug:bool=False)-> bool:
     try:
         print(_TEAM[id_])
@@ -28,3 +36,8 @@ def delete(id_:int, debug: bool=False) -> bool:
         return False
     else:
         return True
+    
+def update(id_:int, instance: dict, debug: bool=False):
+    _TEAM[id_] = instance
+    if debug is True:
+        print(f" FROM DB: player# {id_} has been updated") 
