@@ -35,7 +35,7 @@ def player_update(new_name: str, new_age: int, player_num:int)->None:
             print(f"player# {player_num} new name {new_name}, new age {new_age}")
             is_found = True
                         
-    if is_found == False:
+    if not is_found:
         raise ValueError
         
             
@@ -74,8 +74,7 @@ def main():
             name, age, num = user_items
             try:
                 player_update(name, int(age), int(num))
-            except:
-                ValueError
+            except ValueError:
                 print(f"there is no player with # {num}")
                 continue
 

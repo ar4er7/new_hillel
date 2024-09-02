@@ -28,10 +28,10 @@ def save(id_: int, instance: dict)-> dict:
         return instance
     
 def update(id_:int, instance: dict):
-    player: dict = get(id_=id_)
+    _: dict = get(id_=id_)
     _TEAM[id_] = instance
     return instance
     
 def delete(id_:int):
-    player:dict = get(id_=id_)
+    _:dict = get(id_=id_)
     del _TEAM[id_]

@@ -28,7 +28,7 @@ for player in team:
 # John Doe
 
 
-def dedup(collection) -> Generator[str, None, None]:
+def dedup(collection):
     # TODO: Complete this function
     raise NotImplementedError
 
