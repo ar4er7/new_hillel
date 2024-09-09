@@ -1,16 +1,16 @@
 TEAM_TYPE = dict[int, dict]
 
 team: TEAM_TYPE = {
-    1: {"name":"John", "age": 20}, 
-    3: {"name":"Mark", "age": 33},
-    31: {"name":"Kevin", "age": 31}
+    1: {"name": "John", "age": 20},
+    3: {"name": "Mark", "age": 33},
+    31: {"name": "Kevin", "age": 31},
 }
+
 
 def repr_players(players: TEAM_TYPE):
     for player in players:
-        print(
-            f"\t[Player {player['number']}]: {player['name']}, {player["age"]}"
-            )
+        print(f"\t[Player {player['number']}]: {player['name']}, {player["age"]}")
+
 
 def player_add(name: str, age: int, number: int) -> dict:
     for player in team:
@@ -19,14 +19,15 @@ def player_add(name: str, age: int, number: int) -> dict:
             break
         else:
             player: dict = {
-                "name" : name,
-                "age" : age,
-                "number" : number, 
+                "name": name,
+                "age": age,
+                "number": number,
             }
             team.append(player)
             return player
-        
-def player_update(new_name: str, new_age: int, player_num:int)->None:
+
+
+def player_update(new_name: str, new_age: int, player_num: int) -> None:
     is_found = False
     for player in team:
         if player["number"] == player_num:
@@ -34,26 +35,26 @@ def player_update(new_name: str, new_age: int, player_num:int)->None:
             player["age"] = new_age
             print(f"player# {player_num} new name {new_name}, new age {new_age}")
             is_found = True
-                        
+
     if not is_found:
         raise ValueError
-        
-            
 
-def player_delete(number: int)-> None:
+
+def player_delete(number: int) -> None:
     for player in team:
         if player["number"] == number:
             del player
 
-def main():    
+
+def main():
     operations: tuple[str, ...] = ("add", "del", "repr", "upd", "exit")
-    
+
     while True:
         operation = input("Please enter the operation: ")
         if operation not in operations:
             print(f"Operation {operation}, is not available\n")
             continue
-        
+
         if operation == "exit":
             print("Bye")
             break
@@ -80,7 +81,7 @@ def main():
 
         else:
             raise NotImplementedError
-    
+
+
 if __name__ == "__main__":
     main()
-    
