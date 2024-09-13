@@ -25,9 +25,10 @@ class Price:
         return f"Value: {self.value}, {self.currency}"
 
 
-a = Price(100, "UAH")
-b = Price(100, "USD")
-c = Price(100, "EUR")
+Flight = Price(100, "UAH")
+Train = Price(50, "USD")
 
+total = Flight + Train
 
-print(a + b)
+print(total)
+
