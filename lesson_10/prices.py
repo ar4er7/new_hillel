@@ -1,31 +1,16 @@
 import requests
+from datetime import datetime
+import json
 from dataclasses import dataclass
 
-ALPHAVANTAGE_API_KEY = "MO31CNEF7DLKTRW1"
+ALPHAVANTAGE_API_KEY = "PUJMLUZVGHUKQ3PS"
 MIDDLE_CURRENCY = 'CHF'
 
-# EXCHANGE_RATES = {
-#     "CHF":{
-#         "USD": 0.9,
-#         "UAH": 0.02, 
-#     },
-#     "USD":{
-#         "CHF": 1.1,
-#         "UAH": 0.3, 
-#     },
-#     "UAH":{
-#         "CHF": 3,
-#         "USD": 38,
-#     },
-# }
 
 @dataclass
 class Price:
     value: int
     currency: str
-    
-    def __add__(self, other: "Price")->"Price":
-        return self
     
     def __add__(self, other)->"Price":
         if self.currency == other.currency:
@@ -42,25 +27,49 @@ class Price:
     
     
 def convert(value: float, currency_from: str, currency_to: str)->float:
-    # coefficient: float = EXCHANGE_RATES[currency_from][currency_to]
-    responce: requests.Response = requests.get(
-        f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={currency_from}&to_currency={currency_to}&apikey={ALPHAVANTAGE_API_KEY}"
-    )
-    result: dict = responce.json()
-    coefficient = float(result[ "Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+    # responce: requests.Response = requests.get(
+    #     f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={currency_from}&to_currency={currency_to}&apikey={ALPHAVANTAGE_API_KEY}"
+    # )
+    # result: dict = responce.json()
+    result: dict ={
+        "Realtime Currency Exchange Rate": {
+            "1. From_Currency Code": "USD",
+            "2. From_Currency Name": "United States Dollar",
+            "3. To_Currency Code": "UAH",
+            "4. To_Currency Name": "Ukrainian Hryvnia",
+            "5. Exchange Rate": "41.18550000",
+            "6. Last Refreshed": "2024-09-13 15:54:17",
+            "7. Time Zone": "UTC",
+            "8. Bid Price": "41.18419000",
+            "9. Ask Price": "41.18619000"
+        }
+    }
+    coefficient = float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+    
+    results: dict = {
+        "currency_from": currency_from,
+        "currency_to": currency_to,
+        "rate": coefficient,
+        "timestamp": datetime.now().strftime("%d/%m/%y at %H:%M:%S")
+    }
+    with open('lesson_10\\logs.json', 'r+') as file:
+        file.seek(0, 2)
+        json.dump(results, file)
+        file.write("\n")
+    #Response sample to JSON
     # {
-    #     "Realtime Currency Exchange Rate": {
-    #         "1. From_Currency Code": "USD",
-    #         "2. From_Currency Name": "United States Dollar",
-    #         "3. To_Currency Code": "UAH",
-    #         "4. To_Currency Name": "Ukrainian Hryvnia",
-    #         "5. Exchange Rate": "41.18550000",
-    #         "6. Last Refreshed": "2024-09-13 15:54:17",
-    #         "7. Time Zone": "UTC",
-    #         "8. Bid Price": "41.18419000",
-    #         "9. Ask Price": "41.18619000"
-    #     }
+    # "currency_from": ...,
+    # "currency_to": ...,
+    # "rate": ...,
+    # "timestamp": ...,
     # }
+    
+
+    # data = {'name': 'John', 'age': 30, 'city': 'New York'}
+
+    # with open('data.json', 'w') as file:
+    #     json.dump(data, file)
+
     return value * coefficient
             
 fligt = Price(value=200, currency="USD")
