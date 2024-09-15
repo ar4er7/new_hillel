@@ -27,23 +27,23 @@ class Price:
     
     
 def convert(value: float, currency_from: str, currency_to: str)->float:
-    # responce: requests.Response = requests.get(
-    #     f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={currency_from}&to_currency={currency_to}&apikey={ALPHAVANTAGE_API_KEY}"
-    # )
-    # result: dict = responce.json()
-    result: dict ={
-        "Realtime Currency Exchange Rate": {
-            "1. From_Currency Code": "USD",
-            "2. From_Currency Name": "United States Dollar",
-            "3. To_Currency Code": "UAH",
-            "4. To_Currency Name": "Ukrainian Hryvnia",
-            "5. Exchange Rate": "41.18550000",
-            "6. Last Refreshed": "2024-09-13 15:54:17",
-            "7. Time Zone": "UTC",
-            "8. Bid Price": "41.18419000",
-            "9. Ask Price": "41.18619000"
-        }
-    }
+    responce: requests.Response = requests.get(
+        f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={currency_from}&to_currency={currency_to}&apikey={ALPHAVANTAGE_API_KEY}"
+    )
+    result: dict = responce.json()
+    # result: dict ={
+    #     "Realtime Currency Exchange Rate": {
+    #         "1. From_Currency Code": "USD",
+    #         "2. From_Currency Name": "United States Dollar",
+    #         "3. To_Currency Code": "UAH",
+    #         "4. To_Currency Name": "Ukrainian Hryvnia",
+    #         "5. Exchange Rate": "41.18550000",
+    #         "6. Last Refreshed": "2024-09-13 15:54:17",
+    #         "7. Time Zone": "UTC",
+    #         "8. Bid Price": "41.18419000",
+    #         "9. Ask Price": "41.18619000"
+    #     }
+    # }
     coefficient = float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
     
     results: dict = {
@@ -56,19 +56,6 @@ def convert(value: float, currency_from: str, currency_to: str)->float:
         file.seek(0, 2)
         json.dump(results, file)
         file.write("\n")
-    #Response sample to JSON
-    # {
-    # "currency_from": ...,
-    # "currency_to": ...,
-    # "rate": ...,
-    # "timestamp": ...,
-    # }
-    
-
-    # data = {'name': 'John', 'age': 30, 'city': 'New York'}
-
-    # with open('data.json', 'w') as file:
-    #     json.dump(data, file)
 
     return value * coefficient
             
