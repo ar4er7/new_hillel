@@ -44,7 +44,14 @@ def convert(value: float, currency_from: str, currency_to: str)->float:
     #         "9. Ask Price": "41.18619000"
     #     }
     # }
-    coefficient = float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+    try:
+        float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+    except KeyError:
+        print("something wrong with the API responce. The rate set to 0")
+        coefficient: float = 0.0
+        
+    else:
+        coefficient = float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
     
     results: dict = {
         "currency_from": currency_from,
