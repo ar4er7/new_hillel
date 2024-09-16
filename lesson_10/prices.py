@@ -61,12 +61,12 @@ def convert(value: float, currency_from: str, currency_to: str)->float:
     }
     with open('lesson_10\\logs.json', 'r+') as file:
         file.seek(0, 2)
-        json.dump(results, file)
+        json.dump(results, file, sort_keys=True, indent=2)
         file.write("\n")
 
     return value * coefficient
             
-fligt = Price(value=1500, currency="UAH")
+fligt = Price(value=1500, currency="USD")
 hotel = Price(value=2000, currency="UAH")
 
 total = fligt + hotel
