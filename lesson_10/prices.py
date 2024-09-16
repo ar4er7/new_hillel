@@ -14,7 +14,7 @@ class Price:
     
     def __add__(self, other)->"Price":
         if self.currency == other.currency:
-            return Price(value=(self.currency + other.currency), currency = self.currency)
+            return Price(value=(self.value + other.value), currency = self.currency)
         
         left_in_middle = convert(value=self.value, currency_from=self.currency, currency_to=MIDDLE_CURRENCY)
         right_in_middle = convert(value=other.value, currency_from=other.currency, currency_to=MIDDLE_CURRENCY)
@@ -66,8 +66,8 @@ def convert(value: float, currency_from: str, currency_to: str)->float:
 
     return value * coefficient
             
-fligt = Price(value=200, currency="USD")
-hotel = Price(value=1000, currency="UAH")
+fligt = Price(value=1500, currency="UAH")
+hotel = Price(value=2000, currency="UAH")
 
 total = fligt + hotel
 print(total)
