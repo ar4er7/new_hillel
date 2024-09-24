@@ -4,29 +4,34 @@ import json
 from dataclasses import dataclass
 
 ALPHAVANTAGE_API_KEY = "PUJMLUZVGHUKQ3PS"
-MIDDLE_CURRENCY = 'CHF'
+MIDDLE_CURRENCY = "CHF"
 
 
 @dataclass
 class Price:
     value: int
     currency: str
-    
-    def __add__(self, other)->"Price":
+
+    def __add__(self, other) -> "Price":
         if self.currency == other.currency:
-            return Price(value=(self.value + other.value), currency = self.currency)
-        
-        left_in_middle = convert(value=self.value, currency_from=self.currency, currency_to=MIDDLE_CURRENCY)
-        right_in_middle = convert(value=other.value, currency_from=other.currency, currency_to=MIDDLE_CURRENCY)
+            return Price(value=(self.value + other.value), currency=self.currency)
+
+        left_in_middle = convert(
+            value=self.value, currency_from=self.currency, currency_to=MIDDLE_CURRENCY
+        )
+        right_in_middle = convert(
+            value=other.value, currency_from=other.currency, currency_to=MIDDLE_CURRENCY
+        )
         total_in_middle = left_in_middle + right_in_middle
-        total_in_left: float = convert(value=total_in_middle, currency_from=MIDDLE_CURRENCY, currency_to= self.currency)
-        return Price(value= total_in_left, currency = self.currency)
-        
-        
-            
-    
-    
-def convert(value: float, currency_from: str, currency_to: str)->float:
+        total_in_left: float = convert(
+            value=total_in_middle,
+            currency_from=MIDDLE_CURRENCY,
+            currency_to=self.currency,
+        )
+        return Price(value=total_in_left, currency=self.currency)
+
+
+def convert(value: float, currency_from: str, currency_to: str) -> float:
     responce: requests.Response = requests.get(
         f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={currency_from}&to_currency={currency_to}&apikey={ALPHAVANTAGE_API_KEY}"
     )
@@ -49,23 +54,26 @@ def convert(value: float, currency_from: str, currency_to: str)->float:
     except KeyError:
         print("something wrong with the API responce. The rate set to 0")
         coefficient: float = 0.0
-        
+
     else:
-        coefficient = float(result["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
-    
+        coefficient = float(
+            result["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+        )
+
     results: dict = {
         "currency_from": currency_from,
         "currency_to": currency_to,
         "rate": coefficient,
-        "timestamp": datetime.now().strftime("%d/%m/%y at %H:%M:%S")
+        "timestamp": datetime.now().strftime("%d/%m/%y at %H:%M:%S"),
     }
-    with open('lesson_10\\logs.json', 'r+') as file:
+    with open("lesson_10\\logs.json", "r+") as file:
         file.seek(0, 2)
         json.dump(results, file, sort_keys=True, indent=2)
         file.write("\n")
 
     return value * coefficient
-            
+
+
 fligt = Price(value=1500, currency="USD")
 hotel = Price(value=2000, currency="UAH")
 

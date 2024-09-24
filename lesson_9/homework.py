@@ -31,4 +31,3 @@ Train = Price(50, "USD")
 total = Flight + Train
 
 print(total)
-

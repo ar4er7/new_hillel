@@ -8,10 +8,9 @@ import json
 # for section, commands in templates.items():
 #     print(section)
 #     print('\n'.join(commands))
-    
-    
-    
-with open('json_playground/sw_templates.json') as f:
+
+
+with open("json_playground/sw_templates.json") as f:
     file_content = f.read()
     templates = json.loads(file_content)
 
