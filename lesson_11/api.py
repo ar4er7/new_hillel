@@ -1,8 +1,16 @@
 import uuid
-
+import random
 
 class Stripe_API:
     authorization_state: dict[str, bool] = {}
+    
+    @staticmethod
+    def healthcheck() -> bool:
+        value = random.randint(1,10)
+        if value < 5:
+            return True
+        else:
+            return False
 
     @classmethod
     def authorize(
@@ -26,6 +34,7 @@ class Stripe_API:
 
 class PayPal_API:
     authorization_state: dict[str, bool] = {}
+    
 
     @classmethod
     def authorize(
@@ -45,3 +54,11 @@ class PayPal_API:
             print(f"Checking out with PayPal for {price}$")
             payment_id = uuid.uuid4()
             return str(payment_id)
+        
+    @staticmethod
+    def is_available() -> bool:
+        value = random.randint(1,10)
+        if value < 5:
+            return True
+        else:
+            return False
