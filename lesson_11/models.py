@@ -10,7 +10,7 @@ class Card:
 
 @dataclass
 class User:
-    id: str
+    id: int
     email: str
     age: int
     card: Card

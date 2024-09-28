@@ -1,26 +1,26 @@
 import uuid
 import random
 
+
 class Stripe_API:
     authorization_state: dict[str, bool] = {}
-    
+
     @staticmethod
     def healthcheck() -> bool:
-        value = random.randint(1,10)
-        if value < 5:
-            return True
-        else:
+        value = random.randint(1, 10)
+        if value < 3:
             return False
+        else:
+            return True
 
     @classmethod
     def authorize(
-        cls, token: str, user_email: str, card_number: str, expire_date: str, cvv: int
+        cls, token: str, user_email: str, card_number: int, expire_date: str, cvv: int
     ) -> None:
         if token != "4070b0df-e4f8-4a6f-b5bc-fa8293f8eb88":
             raise Exception("Stripe authorization error")
         else:
             cls.authorization_state[user_email] = True
-            return True
 
     @classmethod
     def checkout(cls, user_email: str, price: int) -> str:
@@ -34,7 +34,6 @@ class Stripe_API:
 
 class PayPal_API:
     authorization_state: dict[str, bool] = {}
-    
 
     @classmethod
     def authorize(
@@ -54,11 +53,11 @@ class PayPal_API:
             print(f"Checking out with PayPal for {price}$")
             payment_id = uuid.uuid4()
             return str(payment_id)
-        
+
     @staticmethod
     def is_available() -> bool:
         value = random.randint(1,10)
-        if value < 5:
-            return True
-        else:
+        if value < 3:
             return False
+        else:
+            return True

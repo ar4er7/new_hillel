@@ -13,44 +13,11 @@ def error_cather(func):
         try:
             return func(*args, **kwargs)
         except Exception as error:
-            print(f"Error cathed: {error}")
+            print(f"Error cached: {error}")
 
     return inner
 
 
-@error_cather
-def checkout(user: User, product: Product, payment_provider: str):
-    if payment_provider == "stripe":
-        Stripe_API.authorize(
-            token = STRIPE_ACCESS_TOKEN,
-            user_email=user.email,
-            card_number= user.card.number,
-            expire_date= user.card.expire_date,
-            cvv = user.card.cvv,            
-        )
-        Stripe_API.checkout(user_email=user.email, price=product.price)
-        
-    elif payment_provider == "paypal":
-        PayPal_API.authorize(
-            username= PAYPAL_CREDENTIALS["username"],
-            password= PAYPAL_CREDENTIALS["password"],
-            email=user.email,
-            card_data= asdict(user.card),
-        )
-        PayPal_API.checkout(email= user.email, price= product.price)
-
-def startup_check(payment_provider: str):
-    if payment_provider == "stripe":
-        available: bool = Stripe_API.healthcheck()
-
-    elif payment_provider == "paypal":
-        available: bool = PayPal_API.is_available()
-    
-    if available is False:
-        print(f"provider {payment_provider} is not available")
-    else:
-        print(f"provider {payment_provider} is AVAILABLE")
-        
 class PaymentProvider(ABC):
     def __init__(self, user: User):
         self.user: User = user
@@ -66,6 +33,7 @@ class PaymentProvider(ABC):
     @abstractmethod
     def healthcheck(self):
         pass
+
 
 class StripePaymentProvider(PaymentProvider):
     def authorize(self, **kwargs):
@@ -84,23 +52,32 @@ class StripePaymentProvider(PaymentProvider):
     def healthcheck(self):
         if Stripe_API.healthcheck() is False:
             raise Exception("Stripe is not available")
-        
+
+
 class PaypalPaymentProvider(PaymentProvider):
     def authorize(self, **kwargs):
         username = kwargs.get("username", "")
         password = kwargs.get("password", "")
         PayPal_API.authorize(
-            username= username,
-            password= password,
+            username=username,
+            password=password,
             email=self.user.email,
-            card_data= asdict(self.user.card),
+            card_data=asdict(self.user.card),
         )
-        
+
+    def healthcheck(self):
+        if PayPal_API.is_available() is False:
+            raise Exception("Paypal is NOT AVAILABLE")
+
+    def checkout(self, product:Product):
+        PayPal_API.checkout(email=self.user.email, price=product.price)
+
+
 def provider_dispatcher(name: str, user: User)-> PaymentProvider:
     if name == "stripe":
         return StripePaymentProvider(user=user)
     elif name == "paypal":
-        return PaypalPaymentProvider()
+        return PaypalPaymentProvider(user=user)
     else:
         raise Exception(f"Provider {name} is not supported")
         
@@ -122,11 +99,27 @@ def main():
     samsung = Product(name="Samsung", price=30_000)
     iphone = Product(name="Iphone", price=35_000)
 
-    startup_check("paypal")
-    startup_check("stripe")
+    stripe_credentials = {
+        "token":  STRIPE_ACCESS_TOKEN
+    }
 
-    checkout(user=john, product=samsung, payment_provider="stripe")
-    checkout(user=marry, product=iphone, payment_provider="paypal")
+    payment_provider: PaymentProvider = provider_dispatcher("stripe", john)
+    try:
+        payment_provider.healthcheck()
+    except Exception as error:
+        print(error)
+    else:
+        payment_provider.authorize(**stripe_credentials)
+        payment_provider.checkout(samsung)
+
+    payment_provider: PaymentProvider = provider_dispatcher("paypal", marry)
+    try:
+        payment_provider.healthcheck()
+    except Exception as error:
+        print(error)
+    else:
+        payment_provider.authorize(**PAYPAL_CREDENTIALS)
+        payment_provider.checkout(iphone)
 
 
 if __name__ == "__main__":
