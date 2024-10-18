@@ -1,5 +1,4 @@
 from .models import SocialChannel, Post
-from abc import ABC
 import datetime
 
 
@@ -14,28 +13,48 @@ def post_a_message(channel: SocialChannel, post: Post) -> None:
     channel.post(post)
 
 
-def process_schedule(posts: list[Post], channels: list[SocialChannel]) -> None:
+posts_list: list[Post] = []
+channels_list: list[SocialChannel] = []
+
+
+def post_dispatcher(message: str, timestamp: datetime) -> Post:
+    post = Post(message=message, timestamp=timestamp)
+    posts_list.append(post)
+    return post
+
+
+def channel_dispatcher(type_: str, followers: int) -> SocialChannel:
+    channel = SocialChannel(type_=type_, followers=followers)
+    channels_list.append(channel)
+    return channel
+
+
+def process_schedule(posts: list[Post], channels: list[SocialChannel], debug: bool = False) -> None:
+    # enable debug to see if it's too early to post
     for post in posts:
-        message, timestamp = post
         for channel in channels:
-            if timestamp <= datetime:
-                post_a_message(channel, message)
+            if post.timestamp <= datetime.datetime.now():
+                post_a_message(channel, post)
+            else:
+                if debug:
+                    print(f"it's too early to post {post.message}")
 
 
 def main():
-    youtube_chanel = SocialChannel("Youtube", 500)
-    facebook_chanel = SocialChannel("Facebook", 20)
-    twitter_chanel = SocialChannel("Twitter", 1000)
+    youtube_chanel = channel_dispatcher("Youtube", 500)
+    facebook_chanel = channel_dispatcher("Facebook", 20)
+    twitter_chanel = channel_dispatcher("Twitter", 1000)
 
-    greeting = Post("Hello, welcome!", datetime.datetime(2024, 10, 18))
-    invite = Post("Feel free to invite your friend to get a prize", datetime.datetime(2024, 10, 18))
-    happy_tg = Post("Happy thanksgiving day!", datetime.datetime(2024, 10, 18))
+    greeting = post_dispatcher("Hello, welcome!", datetime.datetime(2024, 10, 16))
+    invite = post_dispatcher("Feel free to invite your friend to get a prize", datetime.datetime(2024, 10, 18))
+    happy_tg = post_dispatcher("Happy thanksgiving day!", datetime.datetime(2024, 10, 19))
 
-    post_a_message(youtube_chanel, greeting)
-    post_a_message(facebook_chanel, invite)
-    post_a_message(twitter_chanel, happy_tg)
+    process_schedule(posts_list, channels_list)
+
+    # post_a_message(youtube_chanel, greeting)
+    # post_a_message(facebook_chanel, invite)
+    # post_a_message(twitter_chanel, happy_tg)
 
 
 if __name__ == "__main__":
     main()
-git gti

@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 @dataclass
 class Post:
     message: str
-    timestamp: datetime
+    timestamp: datetime.datetime
 
 
 class SocialChannel(ABC):
