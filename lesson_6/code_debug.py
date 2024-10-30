@@ -1,3 +1,6 @@
+from sys import intern
+
+
 class Player:
     def __init__(self, first_name: str, last_name: str):
         self.first_name: str = first_name
@@ -29,8 +32,14 @@ for player in team:
 
 
 def dedup(collection):
-    # TODO: Complete this function
-    raise NotImplementedError
+    try:
+        names= set([i.first_name for i in collection])
+        for item in collection:
+            if item.first_name in list(names):
+                names.remove(item.first_name)
+                yield item
+    except Exception:
+        raise NotImplementedError
 
 
 for player in dedup(team):
