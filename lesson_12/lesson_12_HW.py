@@ -6,8 +6,8 @@ import threading
 from multiprocessing import Process
 
 
-src_root = Path(__file__).parent.parent
-txt_path = Path("rockyou.txt")
+# src_root = Path(__file__).parent.parent
+txt_path = Path("__file__.parent.parent.rockyou.txt")
 image_path = "image.jpg"
 download_url = "https://picsum.photos/1000/1000"
 
