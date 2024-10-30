@@ -1,4 +1,5 @@
 from datetime import datetime
+
 import requests
 
 url = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=PUJMLUZVGHUKQ3PS"

@@ -1,7 +1,8 @@
-import requests
-from datetime import datetime
 import json
 from dataclasses import dataclass
+from datetime import datetime
+
+import requests
 
 ALPHAVANTAGE_API_KEY = "PUJMLUZVGHUKQ3PS"
 MIDDLE_CURRENCY = "CHF"
@@ -9,7 +10,7 @@ MIDDLE_CURRENCY = "CHF"
 
 @dataclass
 class Price:
-    value: int
+    value: float
     currency: str
 
     def __add__(self, other) -> "Price":

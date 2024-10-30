@@ -9,7 +9,7 @@ src_root = Path(__file__).parent.parent
 
 count = 0
 
-with open(src_root / "rockyou.txt", "rt", encoding='latin-1') as file:
+with open(src_root / "rockyou.txt", "rt", encoding="latin-1") as file:
     phrase = input("what do you need to check?")
     for line in file:
         if phrase in line:

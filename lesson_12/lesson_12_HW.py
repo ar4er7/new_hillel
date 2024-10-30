@@ -1,10 +1,10 @@
-import time
-import requests
 import os
-from pathlib import Path
 import threading
+import time
 from multiprocessing import Process
+from pathlib import Path
 
+import requests
 
 # src_root = Path(__file__).parent.parent
 txt_path = Path("__file__.parent.parent.rockyou.txt")
@@ -28,18 +28,22 @@ def encrypt_file(path: Path):
     # Just simulate a heavy computation
     _ = [i for i in range(100_000_000)]
 
+
 # I/O-bound task (downloading image from URL)
 def download_image(image_url):
-    print(f"Downloading image from {image_url} in thread {threading.current_thread().name}")
+    print(
+        f"Downloading image from {image_url} in thread {threading.current_thread().name}"
+    )
     response = requests.get(image_url)
     with open("image.jpg", "wb") as f:
         f.write(response.content)
     print(f"image downloaded as {image_path}")
 
+
 def as_threads():
     try:
         cpu_task = threading.Thread(target=encrypt_file, args=(txt_path,))
-        io_task = threading.Thread(target=download_image, args= (download_url,))
+        io_task = threading.Thread(target=download_image, args=(download_url,))
 
         start = time.perf_counter()
 
@@ -61,6 +65,7 @@ def as_threads():
         )
     except Exception as e:
         print(f"Error occurred: {e}")
+
 
 def as_thread_and_process():
     try:
@@ -88,8 +93,9 @@ def as_thread_and_process():
     except Exception as e:
         print(f"Error occurred: {e}")
 
+
 if __name__ == "__main__":
-        # encrypt_file(txt_path)
-        # download_image("https://picsum.photos/1000/1000")
-        as_threads()
-        as_thread_and_process()
+    # encrypt_file(txt_path)
+    # download_image("https://picsum.photos/1000/1000")
+    as_threads()
+    as_thread_and_process()

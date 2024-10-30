@@ -1,5 +1,5 @@
-import uuid
 import random
+import uuid
 
 
 class Stripe_API:
@@ -56,7 +56,7 @@ class PayPal_API:
 
     @staticmethod
     def is_available() -> bool:
-        value = random.randint(1,10)
+        value = random.randint(1, 10)
         if value < 3:
             return False
         else:

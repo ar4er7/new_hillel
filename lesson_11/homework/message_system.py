@@ -1,6 +1,6 @@
-from .models import SocialChannel, Post
 import datetime
 
+from .models import Post, SocialChannel
 
 # each social channel has a type
 # and the current number of followers
@@ -8,6 +8,7 @@ import datetime
 
 # each post has a message and the timestamp when it should be posted
 # Post = tuple[str, int]
+
 
 def post_a_message(channel: SocialChannel, post: Post) -> None:
     channel.post(post)
@@ -29,7 +30,9 @@ def channel_dispatcher(type_: str, followers: int) -> SocialChannel:
     return channel
 
 
-def process_schedule(posts: list[Post], channels: list[SocialChannel], debug: bool = False) -> None:
+def process_schedule(
+    posts: list[Post], channels: list[SocialChannel], debug: bool = False
+) -> None:
     # enable debug to see if it's too early to post
     for post in posts:
         for channel in channels:
@@ -46,8 +49,13 @@ def main():
     twitter_chanel = channel_dispatcher("Twitter", 1000)
 
     greeting = post_dispatcher("Hello, welcome!", datetime.datetime(2024, 10, 16))
-    invite = post_dispatcher("Feel free to invite your friend to get a prize", datetime.datetime(2024, 10, 18))
-    happy_tg = post_dispatcher("Happy thanksgiving day!", datetime.datetime(2024, 10, 19))
+    invite = post_dispatcher(
+        "Feel free to invite your friend to get a prize",
+        datetime.datetime(2024, 10, 18),
+    )
+    happy_tg = post_dispatcher(
+        "Happy thanksgiving day!", datetime.datetime(2024, 10, 19)
+    )
 
     process_schedule(posts_list, channels_list)
 
