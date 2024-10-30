@@ -1,6 +1,6 @@
 import datetime
 
-from .models import Post, SocialChannel
+from models import Post, SocialChannel
 
 # each social channel has a type
 # and the current number of followers
@@ -44,16 +44,16 @@ def process_schedule(
 
 
 def main():
-    youtube_chanel = channel_dispatcher("Youtube", 500)
-    facebook_chanel = channel_dispatcher("Facebook", 20)
-    twitter_chanel = channel_dispatcher("Twitter", 1000)
+    channel_dispatcher("Youtube", 500)
+    channel_dispatcher("Facebook", 20)
+    channel_dispatcher("Twitter", 1000)
 
-    greeting = post_dispatcher("Hello, welcome!", datetime.datetime(2024, 10, 16))
-    invite = post_dispatcher(
+    post_dispatcher("Hello, welcome!", datetime.datetime(2024, 10, 16))
+    post_dispatcher(
         "Feel free to invite your friend to get a prize",
         datetime.datetime(2024, 10, 18),
     )
-    happy_tg = post_dispatcher(
+    post_dispatcher(
         "Happy thanksgiving day!", datetime.datetime(2024, 10, 19)
     )
 
