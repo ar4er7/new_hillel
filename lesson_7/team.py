@@ -1,10 +1,10 @@
-TEAM_TYPE = dict[int, dict]
+TEAM_TYPE = list[dict]
 
-team: TEAM_TYPE = {
-    1: {"name": "John", "age": 20},
-    3: {"name": "Mark", "age": 33},
-    31: {"name": "Kevin", "age": 31},
-}
+team: TEAM_TYPE = [
+    {"name": "John", "age": 20, "number": 1},
+    {"name": "Mark", "age": 33, "number": 3},
+    {"name": "Kevin", "age": 31, "number": 10},
+]
 
 
 def repr_players(players: TEAM_TYPE):
@@ -43,7 +43,8 @@ def player_update(new_name: str, new_age: int, player_num: int) -> None:
 def player_delete(number: int) -> None:
     for player in team:
         if player["number"] == number:
-            del player
+            team.remove(player)
+            print(f"player {number} has been deleted")
 
 
 def main():
@@ -58,8 +59,19 @@ def main():
         if operation == "exit":
             print("Bye")
             break
+
         elif operation == "repr":
             repr_players(team)
+
+        elif operation == "del":
+            user_data = input("Enter the number of player to be deleted: ")
+            user_choice = int(user_data)
+            try:
+                player_delete(user_choice)
+            except ValueError:
+                print("there are no such player")
+                continue
+
         elif operation == "add":
             user_data = input("Enter the new player information [name, age, number]: ")
             user_items: list[str] = user_data.split(",")
