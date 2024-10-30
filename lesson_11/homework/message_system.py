@@ -53,9 +53,7 @@ def main():
         "Feel free to invite your friend to get a prize",
         datetime.datetime(2024, 10, 18),
     )
-    post_dispatcher(
-        "Happy thanksgiving day!", datetime.datetime(2024, 10, 19)
-    )
+    post_dispatcher("Happy thanksgiving day!", datetime.datetime(2024, 10, 19))
 
     process_schedule(posts_list, channels_list)
 

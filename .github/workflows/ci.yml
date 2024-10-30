@@ -15,4 +15,4 @@ jobs:
       - name: Run formatters
         run: python -m black --check . && isort --check .
       - name: Run linter
-        run: python -m ruff .
+        run: python -m ruff check
