@@ -93,7 +93,3 @@ if __name__ == "__main__":
         # download_image("https://picsum.photos/1000/1000")
         as_threads()
         as_thread_and_process()
-
-
-
-
