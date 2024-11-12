@@ -6,8 +6,7 @@ from threading import Thread
 from time import perf_counter
 
 import requests
-from mypy.moduleinspect import Queue
-
+from queue import Queue
 POKEAPI_BASE_URL: str = "https://pokeapi.co/api/v2/berry"
 
 
