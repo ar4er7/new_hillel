@@ -2,11 +2,12 @@ import random
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pprint import pprint as print
+from queue import Queue
 from threading import Thread
 from time import perf_counter
 
 import requests
-from queue import Queue
+
 POKEAPI_BASE_URL: str = "https://pokeapi.co/api/v2/berry"
 
 
