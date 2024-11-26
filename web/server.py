@@ -1,6 +1,8 @@
 import random
 import string
+from typing import Callable
 
+import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -14,10 +16,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+create_random_string: Callable[[int], str] = lambda size: "".join(
+    [random.choice(string.ascii_letters) for _ in range(size)]
+)
 
-@app.get("/info")
+
+@app.get("/generate-article")
 async def get_information():
-    random_string: str = "".join(
-        [random.choice(string.ascii_letters) for _ in range(10)]
-    )
-    return random_string
+
+    return {
+        "title": create_random_string(size=10),
+        "description": create_random_string(size=20),
+    }
+
+
+@app.get("/fetch-market")
+async def get_current_market_state():
+    url = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=UAH&apikey=MO31CNEF7DLKTRW1"
+
+    # response: requests.Response = requests.get(url)
+    async with httpx.AsyncClient() as client:
+        response: httpx.Response = await client.get(url)
+
+    rate: str = response.json()["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+
+    return {"rate": rate}

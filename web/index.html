@@ -14,19 +14,51 @@
 </head>
 <body>
     <h1>Information fetcher</h1> 
-    <button id="fetch-information">Fetch information</button>
-    <span id="information">No information</span>
+    <button id="generate" class="btn btn-primary">Fetch information</button>
+    <button id="fetchMarket" class="btn btn-primary">Fetch market</button>
+    <span id="marketRate">NOT AVAILABLE</span>
+
+    <br/>
+    <br/>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+        <tbody id="article-ideas"></tbody>
+    </table>
 
     <script>
         $(document).ready(function () {
-            $("#fetch-information").click(function () {
+            $("#fetchMarket").click(function () {
                 $.ajax({
-                    url: "http://localhost:8000/info",
+                    url: "http://localhost:8000/fetch-market",
                     type: "GET",
                     success: function(data) {
-                        $("#information").text(data);
+                        $("#marketRate").text(data.rate);
                     },
-                    error: function (jqdata, status, error) {},
+                    error: function (jqdata, status, error) {
+                        console.log(error);
+                        alert("An error occured while generating an article idea.")
+                    },
+                });
+            });
+            $("#generate").click(function () {
+                $.ajax({
+                    url: "http://localhost:8000/generate-article",
+                    type: "GET",
+                    success: function(data) {
+                        const newItem = `<tr>
+                            <td>${data.title}</td>
+                            <td>${data.description}</td>
+                        </tr>`;
+                        $("#article-ideas").append(newItem);
+                    },
+                    error: function (jqdata, status, error) {
+                        console.log(error);
+                        alert("An error occured while generating an article idea.")
+                    },
                 });
             });
         });
