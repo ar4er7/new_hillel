@@ -3,6 +3,7 @@ import string
 from datetime import datetime, timedelta
 from typing import Callable
 
+import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -34,20 +35,28 @@ class Item(BaseModel):
 async def get_rate_from_currencies(item: Item):
     global last_answer_time, total_price
     current_time = datetime.now()
+    url = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={item.src_currency}&to_currency={item.dest_currency}&apikey=MO31CNEF7DLKTRW1"
+    
     if last_answer_time:
-        if current_time - last_answer_time < timedelta(seconds=10):
+        if current_time - last_answer_time < timedelta(minutes=10):
             return {
-                "CACHED_price": total_price,
+                "Source": item.src_currency,
+                "Destination": item.dest_currency,
+                "CACHED_rate": total_price,
                 "CACHED_time": last_answer_time.strftime("%X"),
             }
+    
+    async with httpx.AsyncClient() as client:
+        response: httpx.Response = await client.get(url)
 
+    rate: str = response.json()["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+    total_price = rate
     last_answer_time = current_time
-    total_price = random.randint(1, 10)
     return {
-        "total_price": total_price,
-        "time": current_time.strftime("%X"),
-        "last_request_time": last_answer_time.strftime("%X"),
-    }
+        "Source": item.src_currency,
+        "Destination": item.dest_currency,
+        "rate": total_price,
+        }
 
 
 @app.get("/generate-article")
