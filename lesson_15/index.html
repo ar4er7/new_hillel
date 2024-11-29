@@ -21,7 +21,7 @@
                     dest_currency: "BTC",
                 };
                 $.ajax({
-                    url: "http://127.0.0.1:8000/ajax-handler/",
+                    url: "http://127.0.0.1:8000/rate-check/",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(data),
@@ -35,12 +35,42 @@
                     }
                 });
             });
+            $("#generate").click(function () {
+                $.ajax({
+                    url: "http://localhost:8000/generate-article",
+                    type: "GET",
+                    success: function(data) {
+                        const newItem = `<tr>
+                            <td>${data.title}</td>
+                            <td>${data.description}</td>
+                        </tr>`;
+                        $("#article-ideas").append(newItem);
+                    },
+                    error: function (jqdata, status, error) {
+                        console.log(error);
+                        alert("An error occured while generating an article idea.")
+                    },
+                });
+            });
+        
         });
     </script>
 
 
-    <h1>AJAX with jQuery Example</h1>
+    <h1>Request rates</h1>
+    <button id="generate" class="btn btn-danger">Fetch information</button>
     <button id="makeRequest" class="btn btn-primary">Request a rate</button>
     <pre id="output"></pre>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+        <tbody id="article-ideas"></tbody>
+
+    <br/>
+
+    </table>
 </body>
 </html>
