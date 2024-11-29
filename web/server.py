@@ -1,6 +1,5 @@
 import random
 import string
-from typing import Callable
 
 import httpx
 from fastapi import FastAPI
@@ -16,9 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-create_random_string: Callable[[int], str] = lambda size: "".join(
-    [random.choice(string.ascii_letters) for _ in range(size)]
-)
+
+# create_random_string: Callable[[int], str] = lambda size: "".join(
+#     [random.choice(string.ascii_letters) for _ in range(size)]
+# )
+def create_random_string(size: int) -> str:
+    return "".join(random.choice(string.ascii_letters) for _ in range(size))
 
 
 @app.get("/generate-article")
