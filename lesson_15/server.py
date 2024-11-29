@@ -1,7 +1,6 @@
 import random
 import string
 from datetime import datetime, timedelta
-from typing import Callable
 
 import httpx
 from fastapi import FastAPI
@@ -21,9 +20,9 @@ app.add_middleware(
 last_answer_time = None
 total_price = 0
 
-create_random_string: Callable[[int], str] = lambda size: "".join(
-    [random.choice(string.ascii_letters) for _ in range(size)]
-)
+
+def create_random_string(size: int) -> str:
+    return "".join(random.choice(string.ascii_letters) for _ in range(size))
 
 
 class Item(BaseModel):
@@ -36,7 +35,7 @@ async def get_rate_from_currencies(item: Item):
     global last_answer_time, total_price
     current_time = datetime.now()
     url = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={item.src_currency}&to_currency={item.dest_currency}&apikey=MO31CNEF7DLKTRW1"
-    
+
     if last_answer_time:
         if current_time - last_answer_time < timedelta(minutes=10):
             return {
@@ -45,7 +44,7 @@ async def get_rate_from_currencies(item: Item):
                 "CACHED_rate": total_price,
                 "CACHED_time": last_answer_time.strftime("%X"),
             }
-    
+
     async with httpx.AsyncClient() as client:
         response: httpx.Response = await client.get(url)
 
@@ -56,7 +55,7 @@ async def get_rate_from_currencies(item: Item):
         "Source": item.src_currency,
         "Destination": item.dest_currency,
         "rate": total_price,
-        }
+    }
 
 
 @app.get("/generate-article")
