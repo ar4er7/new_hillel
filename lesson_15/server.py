@@ -37,7 +37,7 @@ async def get_rate_from_currencies(item: Item):
     url = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={item.src_currency}&to_currency={item.dest_currency}&apikey=MO31CNEF7DLKTRW1"
 
     if last_answer_time:
-        if current_time - last_answer_time < timedelta(minutes=10):
+        if current_time - last_answer_time < timedelta(seconds=10):
             return {
                 "Source": item.src_currency,
                 "Destination": item.dest_currency,
